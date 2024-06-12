@@ -1,35 +1,65 @@
-import { useState } from 'react'
+import { ChangeEventHandler, FormEventHandler, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import './App.css'
 
+const DUMMY_TODOS= [
+  {
+    id:1,
+    title:"Attend the React Course"
+    
+  },
+  {
+    id:2,
+    title:"Build a ToDO List"
+    
+  },
+  {
+    id:3,
+    title:"???"
+    
+  },
+  
+];
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos,setTodos] = useState(DUMMY_TODOS);
+  const [inputValue, setinputValue] = useState("");
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    
+    setTodos((prevtodos) => {
+      const newTodo = {
+        id: Math.floor(Math.random()*1000) + todos.length,
+        title: inputValue,
+      };
+      setinputValue(" ");
+      return [...prevtodos, newTodo]
+      
 
+    }
+  )};
+  const handleInputChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setinputValue(event.target.value);
+  }
   return (
-    <>
-      <div  className="flex justify-between">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  <main>
+    <h1>ToDO List</h1>
+
+    <form onSubmit={handleSubmit}>
+    <input type="text" value={inputValue} onChange={handleInputChange} />
+    <button>Submit</button>
+    </form>
+ 
+    <h2>My ToDOs</h2>
+
+    <ul className="list-inside list-disc">
+      {todos.map((todo) =>(
+        <li key={todo.id}>{todo.id} {todo.title}</li>
+      ))}
+    </ul>
+  </main>
+  
+) ;
+
 }
 
 export default App
